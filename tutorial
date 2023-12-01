@@ -1,0 +1,69 @@
+1. Connect to the server
+
+# Connect to your server using SSH as the root user
+ssh root@andrew_yoon_ip
+
+2. Create a new user
+# Create a new user with administrative privileges
+adduser andrew_yoon
+usermod -aG sudo andrew_yoon
+
+# Set Bash as the login shell for the new user
+chsh -s /bin/bash andrew_yoon
+
+# Configure SSH access for the new user
+su - andrew_yoon
+ssh-keygen -t rsa
+mkdir ~/.ssh
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+# Ensure that you can now connect to the server using the new user
+exit  # to return to the root user
+ssh andrew_yoon@my_server_ip
+
+3. Preventing Root SSH Access
+
+# Open the SSH daemon configuration file
+sudo nano /etc/ssh/sshd_config
+
+# Change PermitRootLogin to no
+PermitRootLogin no
+
+# Save and exit the editor
+
+# Restart the SSH service
+sudo systemctl restart ssh
+
+4. Install Nginx
+
+# Update the package list
+sudo apt update
+
+# Install Nginx
+sudo apt install nginx
+
+# Start and enable Nginx
+sudo systemctl start nginx
+sudo systemctl enable nginx
+
+5. Configure Nginx for a Sample Website
+# Create a sample HTML file
+sudo nano /var/www/html/index.html
+
+# Paste the HTML content and save
+
+# Create a new Nginx server block configuration
+sudo nano /etc/nginx/sites-available/sample_website
+
+# Paste the Nginx configuration and save
+
+# Create a symbolic link to enable the server block
+sudo ln -s /etc/nginx/sites-available/sample_website /etc/nginx/sites-enabled
+
+# Test the Nginx configuration
+sudo nginx -t
+
+# If the test is successful, restart Nginx
+sudo systemctl restart nginx
